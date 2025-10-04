@@ -1,3 +1,6 @@
+# 22694611-TranLeKiet-EProject
+Dự án phục vụ cho việc học. Được cung cấp bởi ThS. Huỳnh Nam 
+
 Du an su dung: Push-based
 
 Trong co che thuc hien giao tiep bat dong bo trong misro service co 2 loai
