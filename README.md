@@ -92,6 +92,7 @@ Product Service lắng nghe Queue, nhận dữ liệu xác minh, tiến hành **
 | **Queue** | Trung gian lưu trữ tạm thời các sự kiện / yêu cầu |
 
 > 🔍 Cấu hình cụ thể được triển khai trong file:  
+> `auth/src/controllers/authController.js`
 > `product/src/controllers/productController.js`
 
 ---
@@ -180,6 +181,8 @@ cd 22694611-TranLeKiet-EProject
 
 # Cài đặt gói chung
 npm install
+npm install bcryptjs
+npm install uuid@8.3.2
 
 # Cài đặt từng service
 cd auth && npm install && npm start
@@ -198,26 +201,6 @@ Chạy:
 ```bash
 npm test
 ```
-
----
-
-### 👥 Thành viên nhóm
-| Họ và tên | Vai trò | Phụ trách |
-|------------|----------|-----------|
-| **Trần Lê Kiệt** | Trưởng nhóm | Kiến trúc hệ thống, tích hợp RabbitMQ, API Gateway |
-| [Thành viên khác] | Developer | Auth Service |
-| [Thành viên khác] | Developer | Product Service |
-| [Thành viên khác] | Developer | Order Service |
-
----
-
-### 🚀 Định hướng phát triển
-- Thêm **Payment Service** và **Shipping Service**.  
-- Tích hợp **RabbitMQ Routing Keys** hoặc **Kafka Streams**.  
-- Áp dụng **JWT Refresh Token + RBAC Authorization**.  
-- Triển khai trên **Docker & Kubernetes Cluster**.
-
----
 
 ### 📜 Giấy phép
 Dự án phục vụ mục đích học tập trong khuôn khổ môn học **Lập trình hướng dịch vụ** – được giảng dạy bởi **ThS. Huỳnh Nam**.  
