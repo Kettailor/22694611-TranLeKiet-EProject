@@ -201,6 +201,7 @@ Chạy:
 ```bash
 npm test
 ```
+![Result Test](./assets/img/image.png)
 
 ### 📜 Giấy phép
 Dự án phục vụ mục đích học tập trong khuôn khổ môn học **Lập trình hướng dịch vụ** – được giảng dạy bởi **ThS. Huỳnh Nam**.  
