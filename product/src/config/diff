@@ -1,0 +1,5 @@
+
+- mongoURI: process.env.MONGODB_PRODUCT_URI || "mongodb://localhost/products",
+- rabbitMQURI: process.env.RABBITMQ_URI || "amqp://localhost",
++ mongoURI: process.env.MONGODB_PRODUCT_URI || "mongodb://mongodb:27017/productDB",
++ rabbitMQURI: process.env.RABBITMQ_URI || "amqp://guest:guest@rabbitmq:5672",
