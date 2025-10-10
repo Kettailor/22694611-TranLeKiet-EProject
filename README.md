@@ -97,15 +97,20 @@ docker-compose up -d auth product order api-gateway
 ---
 
 ## 🧩 Thử nghiệm dự án với POSTMAN
-Auth Service
+**Auth Service**
+
 ![Register](assets/img/regis.png)
 ![Login](assets/img/login.png)
 ![Dashboard](assets/img/dashboard.png)
-Product Service
+
+**Product Service**
+
 ![createProduct](assets/img/createProduct.png)
 ![getProduct](assets/img/getProduct.png)
 ![buyProduct](assets/img/buyProduct.png)
-DataBase
+
+**DataBase**
+
 ![data](assets/img/data.png)
 
 ---
