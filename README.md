@@ -97,7 +97,16 @@ docker-compose up -d auth product order api-gateway
 ---
 
 ## 🧩 Thử nghiệm dự án với POSTMAN
-
+Auth Service
+![Register](assets/img/regis.png)
+![Login](assets/img/login.png)
+![Dashboard](assets/img/dashboard.png)
+Product Service
+![createProduct](assets/img/createProduct.png)
+![getProduct](assets/img/getProduct.png)
+![buyProduct](assets/img/buyProduct.png)
+DataBase
+![data](assets/img/data.png)
 
 ---
 
@@ -130,9 +139,9 @@ docker-compose down -v --rmi all --remove-orphans
 
 ## 👨‍💻 Tác giả
 
-**Sinh viên:** Trần Lê Kiệt
-**Mã SV:** 22694611
-**Môn học:** Lập trình hướng dịch vụ  
-**Giảng viên hướng dẫn:** ThS. Huỳnh Nam
+- **Sinh viên:** Trần Lê Kiệt
+- **Mã SV:** 22694611
+- **Môn học:** Lập trình hướng dịch vụ  
+- **Giảng viên hướng dẫn:** ThS. Huỳnh Nam
 
 ---
