@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const DEFAULT_PORT = 3002;
 const DEFAULT_MONGO_URI = "mongodb://localhost:27017/orders";
-const DEFAULT_RABBIT_URI = "amqp://rabbitmq";
+const DEFAULT_RABBIT_URI = "amqp://app:app@rabbitmq";
 const DEFAULT_ORDER_QUEUE = "orders";
 const DEFAULT_PRODUCT_QUEUE = "products";
 const DEFAULT_JWT_SECRET = "secret";
