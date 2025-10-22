@@ -3,9 +3,6 @@ const messageBroker = require("../utils/messageBroker");
 const config = require("../config");
 const uuid = require("uuid");
 
-/**
- * Class to hold the API implementation for the product services
- */
 class ProductController {
 
   constructor() {
