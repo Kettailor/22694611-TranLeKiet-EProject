@@ -29,13 +29,12 @@ class App {
   
     setTimeout(async () => {
       try {
-        const amqpServer = "amqp://rabbitmq:5672";
-        const connection = await amqp.connect(amqpServer);
+        const connection = await amqp.connect(config.rabbitMQURI);
         console.log("Connected to RabbitMQ");
         const channel = await connection.createChannel();
-        await channel.assertQueue("orders");
-  
-        channel.consume("orders", async (data) => {
+        await channel.assertQueue(config.orderQueue);
+
+        channel.consume(config.orderQueue, async (data) => {
           // Consume messages from the order queue on buy
           console.log("Consuming ORDER service");
           const { products, username, orderId } = JSON.parse(data.content);
@@ -57,8 +56,10 @@ class App {
           // Include orderId in the message
           const { user, products: savedProducts, totalPrice } = newOrder.toJSON();
           channel.sendToQueue(
-            "products",
-            Buffer.from(JSON.stringify({ orderId, user, products: savedProducts, totalPrice }))
+            config.productQueue,
+            Buffer.from(
+              JSON.stringify({ orderId, user, products: savedProducts, totalPrice })
+            )
           );
         });
       } catch (err) {
