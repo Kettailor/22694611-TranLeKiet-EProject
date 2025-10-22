@@ -1,6 +1,6 @@
 # EProject Microservices Platform
 
-[![CI/CD](https://github.com/TranLeKiet/EProject/actions/workflows/ci.yml/badge.svg)](https://github.com/Kettailor/EProject/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/Kettailor/EProject/actions/workflows/ci.yml/badge.svg)](https://github.com/Kettailor/EProject/actions/workflows/ci.yml)
 
 EProject is a learning-oriented microservices environment that demonstrates how an e-commerce style workflow can be decomposed into independent Node.js services. It showcases authentication, catalog management, order processing, and an API gateway, all orchestrated with Docker Compose and backed by MongoDB and RabbitMQ.
 
