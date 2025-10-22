@@ -55,6 +55,8 @@ Each service reads its configuration from environment variables with sensible de
 
 Copy the required variables into `.env` files under each service (e.g. `auth/.env`, `product/.env`, etc.) before running the stack.
 
+> **RabbitMQ credentials:** Docker Compose now provisions RabbitMQ with the `app` / `app` user. The services default to `amqp://app:app@rabbitmq:5672`, so update any custom `.env` files to match.
+
 ### Run with Docker Compose
 
 1. Ensure Docker is running.
