@@ -17,7 +17,7 @@ const PRODUCT_SERVICE_URL =
   process.env.PRODUCT_SERVICE_URL ||
   `http://${PRODUCT_SERVICE_HOST}:${PRODUCT_SERVICE_PORT}`;
 const ORDER_SERVICE_URL =
-  process.env.ORDER_SERVICE_URL || `http://${ORDER_SERVICE_HOST}:${ORDER_SERVICE_PORT}`;
+process.env.ORDER_SERVICE_URL || `http://${ORDER_SERVICE_HOST}:${ORDER_SERVICE_PORT}`;
 
 proxy.on("error", (err, req, res) => {
   console.error("Proxy error:", err.message);
