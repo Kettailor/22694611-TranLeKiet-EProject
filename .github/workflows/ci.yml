@@ -79,9 +79,9 @@ jobs:
       - name: Debug secrets
         run: |
           if [ -z "${{ secrets.DOCKER_NAME }}" ] || [ -z "${{ secrets.DOCKER_TOKEN }}" ]; then
-            echo "❌ Missing Docker secrets"
+            echo "Missing Docker secrets"
             exit 1
           else
-            echo "✅ Docker secrets found"
+            echo "Docker secrets found"
           fi
 
