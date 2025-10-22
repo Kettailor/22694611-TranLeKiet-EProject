@@ -1,7 +1,7 @@
 const Product = require("../models/product");
 const messageBroker = require("../utils/messageBroker");
 const config = require("../config");
-const uuid = require("uuid");
+const { randomUUID } = require("crypto");
 
 /**
  * Class to hold the API implementation for the product services
@@ -47,7 +47,7 @@ class ProductController {
       const { ids } = req.body;
       const products = await Product.find({ _id: { $in: ids } });
   
-      const orderId = uuid.v4(); // Generate a unique order ID
+      const orderId = randomUUID(); // Generate a unique order ID
       this.ordersMap.set(orderId, { 
         status: "pending", 
         products, 
