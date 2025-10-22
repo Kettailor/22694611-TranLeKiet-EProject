@@ -34,11 +34,16 @@ class App {
   setRoutes() {
     this.app.post("/login", (req, res) => this.authController.login(req, res));
     this.app.post("/register", (req, res) => this.authController.register(req, res));
-    this.app.get("/dashboard", authMiddleware, (req, res) => res.json({ message: "Welcome to dashboard" }));
+    this.app.get("/dashboard", authMiddleware, (req, res) =>
+      res.json({ message: "Welcome to dashboard" })
+    );
   }
 
   start() {
-    this.server = this.app.listen(3000, () => console.log("Server started on port 3000"));
+    const port = config.port;
+    this.server = this.app.listen(port, () =>
+      console.log(`Server started on port ${port}`)
+    );
   }
 
   async stop() {
