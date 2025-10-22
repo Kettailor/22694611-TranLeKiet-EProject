@@ -26,7 +26,8 @@ class App {
 
   async setupOrderConsumer() {
     console.log("Connecting to RabbitMQ...");
-  
+
+    const delay = config.rabbitMQConnectDelayMs;
     setTimeout(async () => {
       try {
         const connection = await amqp.connect(config.rabbitMQURI);
@@ -38,22 +39,18 @@ class App {
           // Consume messages from the order queue on buy
           console.log("Consuming ORDER service");
           const { products, username, orderId } = JSON.parse(data.content);
-  
+
           const newOrder = new Order({
             products,
             user: username,
             totalPrice: products.reduce((acc, product) => acc + product.price, 0),
           });
-  
-          // Save order to DB
+
           await newOrder.save();
-  
-          // Send ACK to ORDER service
+
           channel.ack(data);
           console.log("Order saved to DB and ACK sent to ORDER queue");
-  
-          // Send fulfilled order to PRODUCTS service
-          // Include orderId in the message
+
           const { user, products: savedProducts, totalPrice } = newOrder.toJSON();
           channel.sendToQueue(
             config.productQueue,
@@ -65,10 +62,8 @@ class App {
       } catch (err) {
         console.error("Failed to connect to RabbitMQ:", err.message);
       }
-    }, 10000); // add a delay to wait for RabbitMQ to start in docker-compose
+    }, delay);
   }
-
-
 
   start() {
     this.server = this.app.listen(config.port, () =>

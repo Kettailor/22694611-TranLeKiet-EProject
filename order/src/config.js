@@ -7,4 +7,3 @@ module.exports = {
   productQueue: process.env.RABBITMQ_PRODUCT_QUEUE || "products",
   port: process.env.PORT || 3002,
 };
-  

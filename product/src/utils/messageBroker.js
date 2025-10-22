@@ -9,6 +9,7 @@ class MessageBroker {
   async connect() {
     console.log("Connecting to RabbitMQ...");
 
+    const delay = config.rabbitMQConnectDelayMs;
     setTimeout(async () => {
       try {
         const connection = await amqp.connect(config.rabbitMQURI);
@@ -18,7 +19,7 @@ class MessageBroker {
       } catch (err) {
         console.error("Failed to connect to RabbitMQ:", err.message);
       }
-    }, 20000); // delay 10 seconds to wait for RabbitMQ to start
+    }, delay);
   }
 
   async publishMessage(queue, message) {
@@ -28,10 +29,7 @@ class MessageBroker {
     }
 
     try {
-      await this.channel.sendToQueue(
-        queue,
-        Buffer.from(JSON.stringify(message))
-      );
+      await this.channel.sendToQueue(queue, Buffer.from(JSON.stringify(message)));
     } catch (err) {
       console.log(err);
     }
