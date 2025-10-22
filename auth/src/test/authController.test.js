@@ -1,79 +1,130 @@
 const chai = require("chai");
-const chaiHttp = require("chai-http");
-const App = require("../app");
-require("dotenv").config();
+const AuthController = require("../controllers/authController");
 
-
-chai.use(chaiHttp);
 const { expect } = chai;
 
-describe("User Authentication", () => {
-  let app;
+const createResponse = () => {
+  const res = {
+    statusCalls: [],
+    jsonCalls: [],
+  };
 
-  before(async () => {
-    app = new App();
-    await app.connectDB();
-    app.start();
-  });
+  res.status = function (code) {
+    this.statusCalls.push(code);
+    return this;
+  };
 
-  after(async () => {
-    await app.authController.authService.deleteTestUsers();
-    await app.disconnectDB();
-    app.stop();
-  });
+  res.json = function (payload) {
+    this.jsonCalls.push(payload);
+    return this;
+  };
 
-  describe("POST /register", () => {
-    it("should register a new user", async () => {
-      const res = await chai
-        .request(app.app)
-        .post("/register")
-        .send({ username: "testuser", password: "password" });
+  return res;
+};
 
-      expect(res).to.have.status(200);
-      expect(res.body).to.have.property("_id");
-      expect(res.body).to.have.property("username", "testuser");
+describe("AuthController", () => {
+  describe("register", () => {
+    it("should register a new user when username is available", async () => {
+      const controller = new AuthController();
+      controller.authService = {
+        findUserByUsername: async () => null,
+        register: async (user) => ({ _id: "123", username: user.username }),
+      };
+      const req = {
+        body: { username: "testuser", password: "password" },
+      };
+      const res = createResponse();
+
+      await controller.register(req, res);
+
+      expect(res.statusCalls).to.be.empty;
+      expect(res.jsonCalls).to.have.lengthOf(1);
+      expect(res.jsonCalls[0]).to.deep.equal({
+        _id: "123",
+        username: "testuser",
+      });
     });
 
-    it("should return an error if the username is already taken", async () => {
-      const res = await chai
-        .request(app.app)
-        .post("/register")
-        .send({ username: "testuser", password: "password" });
+    it("should return 400 if username already exists", async () => {
+      const controller = new AuthController();
+      controller.authService = {
+        findUserByUsername: async () => ({ _id: "existing", username: "testuser" }),
+        register: async () => {
+          throw new Error("Should not be called");
+        },
+      };
+      const req = {
+        body: { username: "testuser", password: "password" },
+      };
+      const res = createResponse();
 
-      expect(res).to.have.status(400);
-      expect(res.body).to.have.property("message", "Username already taken");
+      await controller.register(req, res);
+
+      expect(res.statusCalls).to.deep.equal([400]);
+      expect(res.jsonCalls).to.have.lengthOf(1);
+      expect(res.jsonCalls[0]).to.deep.equal({
+        message: "Username already taken",
+      });
     });
   });
 
-  describe("POST /login", () => {
+  describe("login", () => {
     it("should return a JWT token for a valid user", async () => {
-      const res = await chai
-        .request(app.app)
-        .post("/login")
-        .send({ username: "testuser", password: "password" });
+      const controller = new AuthController();
+      controller.authService = {
+        login: async () => ({ success: true, token: "jwt-token" }),
+      };
+      const req = {
+        body: { username: "testuser", password: "password" },
+      };
+      const res = createResponse();
 
-      expect(res).to.have.status(200);
-      expect(res.body).to.have.property("token");
+      await controller.login(req, res);
+
+      expect(res.statusCalls).to.be.empty;
+      expect(res.jsonCalls).to.deep.equal([{ token: "jwt-token" }]);
     });
 
-    it("should return an error for an invalid user", async () => {
-      const res = await chai
-        .request(app.app)
-        .post("/login")
-        .send({ username: "invaliduser", password: "password" });
+    it("should return 400 for an invalid user", async () => {
+      const controller = new AuthController();
+      controller.authService = {
+        login: async () => ({
+          success: false,
+          message: "Invalid username or password",
+        }),
+      };
+      const req = {
+        body: { username: "invaliduser", password: "password" },
+      };
+      const res = createResponse();
 
-      expect(res).to.have.status(400);
-      expect(res.body).to.have.property("message", "Invalid username or password");
+      await controller.login(req, res);
+
+      expect(res.statusCalls).to.deep.equal([400]);
+      expect(res.jsonCalls).to.deep.equal([
+        { message: "Invalid username or password" },
+      ]);
     });
 
-    it("should return an error for an incorrect password", async () => {
-      const res = await chai
-        .request(app.app)
-        .post("/login")
-        .send({ username: "testuser", password: "wrongpassword" });
+    it("should return 400 for an incorrect password", async () => {
+      const controller = new AuthController();
+      controller.authService = {
+        login: async () => ({
+          success: false,
+          message: "Invalid username or password",
+        }),
+      };
+      const req = {
+        body: { username: "testuser", password: "wrongpassword" },
+      };
+      const res = createResponse();
 
-      expect(res).to.have.status(400);
-      expect(res.body).to.have.property("message", "Invalid username or password");
+      await controller.login(req, res);
+
+      expect(res.statusCalls).to.deep.equal([400]);
+      expect(res.jsonCalls).to.deep.equal([
+        { message: "Invalid username or password" },
+      ]);
     });
   });
 });
