@@ -14,7 +14,7 @@ class MessageBroker {
       try {
         const connection = await amqp.connect(config.rabbitMQURI);
         this.channel = await connection.createChannel();
-        await this.channel.assertQueue(config.productQueue, { durable: true });
+        await this.channel.assertQueue(config.productQueue);
         console.log("RabbitMQ connected");
       } catch (err) {
         console.error("Failed to connect to RabbitMQ:", err.message);

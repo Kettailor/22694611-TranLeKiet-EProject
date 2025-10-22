@@ -19,7 +19,6 @@ services:
   auth:
     build: ./auth
     environment:
-      - PORT=3000
       - MONGODB_AUTH_URI=mongodb://mongo:27017/auth
       - JWT_SECRET=secret
     ports:
@@ -35,7 +34,6 @@ services:
       - RABBITMQ_URI=amqp://rabbitmq:5672
       - RABBITMQ_ORDER_QUEUE=orders
       - RABBITMQ_PRODUCT_QUEUE=products
-      - RABBITMQ_CONNECT_DELAY_MS=20000
       - JWT_SECRET=secret
     ports:
       - "3001:3001"
@@ -51,8 +49,6 @@ services:
       - RABBITMQ_URI=amqp://rabbitmq:5672
       - RABBITMQ_ORDER_QUEUE=orders
       - RABBITMQ_PRODUCT_QUEUE=products
-      - RABBITMQ_CONNECT_DELAY_MS=10000
-      - JWT_SECRET=secret
     ports:
       - "3002:3002"
     depends_on:
@@ -63,9 +59,6 @@ services:
     build: ./api-gateway
     environment:
       - PORT=3003
-      - AUTH_SERVICE_URL=http://auth:3000
-      - PRODUCT_SERVICE_URL=http://product:3001
-      - ORDER_SERVICE_URL=http://order:3002
     ports:
       - "3003:3003"
     depends_on:

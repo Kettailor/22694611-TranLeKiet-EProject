@@ -33,9 +33,10 @@ class App {
         const connection = await amqp.connect(config.rabbitMQURI);
         console.log("Connected to RabbitMQ");
         const channel = await connection.createChannel();
-        await channel.assertQueue(config.orderQueue, { durable: true });
+        await channel.assertQueue(config.orderQueue);
 
         channel.consume(config.orderQueue, async (data) => {
+          // Consume messages from the order queue on buy
           console.log("Consuming ORDER service");
           const { products, username, orderId } = JSON.parse(data.content);
 
@@ -55,8 +56,7 @@ class App {
             config.productQueue,
             Buffer.from(
               JSON.stringify({ orderId, user, products: savedProducts, totalPrice })
-            ),
-            { persistent: true }
+            )
           );
         });
       } catch (err) {
