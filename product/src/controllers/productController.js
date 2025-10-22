@@ -1,8 +1,10 @@
 const Product = require("../models/product");
 const messageBroker = require("../utils/messageBroker");
-const config = require("../config");
-const uuid = require("uuid");
+const uuid = require('uuid');
 
+/**
+ * Class to hold the API implementation for the product services
+ */
 class ProductController {
 
   constructor() {
@@ -51,13 +53,13 @@ class ProductController {
         username: req.user.username
       });
   
-      await messageBroker.publishMessage(config.orderQueue, {
+      await messageBroker.publishMessage("orders", {
         products,
         username: req.user.username,
         orderId, // include the order ID in the message to orders queue
       });
 
-      messageBroker.consumeMessage(config.productQueue, (data) => {
+      messageBroker.consumeMessage("products", (data) => {
         const orderData = JSON.parse(JSON.stringify(data));
         const { orderId } = orderData;
         const order = this.ordersMap.get(orderId);

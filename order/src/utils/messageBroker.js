@@ -5,14 +5,14 @@ const OrderService = require("../services/orderService");
 class MessageBroker {
   static async connect() {
     try {
-      const connection = await amqp.connect(config.rabbitMQURI);
+      const connection = await amqp.connect(config.rabbitMQUrl);
       const channel = await connection.createChannel();
 
       // Declare the order queue
-      await channel.assertQueue(config.orderQueue, { durable: true });
+      await channel.assertQueue(config.rabbitMQQueue, { durable: true });
 
       // Consume messages from the order queue on buy
-      channel.consume(config.orderQueue, async (message) => {
+      channel.consume(config.rabbitMQQueue, async (message) => {
         try {
           const order = JSON.parse(message.content.toString());
           const orderService = new OrderService();
