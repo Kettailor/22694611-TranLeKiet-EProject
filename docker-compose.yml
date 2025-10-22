@@ -13,8 +13,8 @@ services:
     image: rabbitmq:3-management
     restart: unless-stopped
     environment:
-      - RABBITMQ_DEFAULT_USER=app
-      - RABBITMQ_DEFAULT_PASS=app
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
     ports:
       - "5672:5672"
       - "15672:15672"
