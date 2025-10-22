@@ -76,3 +76,12 @@ jobs:
             docker push "$IMAGE_SHA"
             docker push "$IMAGE_LATEST"
           done
+      - name: Debug secrets
+        run: |
+          if [ -z "${{ secrets.DOCKER_NAME }}" ] || [ -z "${{ secrets.DOCKER_TOKEN }}" ]; then
+            echo "❌ Missing Docker secrets"
+            exit 1
+          else
+            echo "✅ Docker secrets found"
+          fi
+
