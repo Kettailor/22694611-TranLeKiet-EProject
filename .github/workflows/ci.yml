@@ -42,6 +42,7 @@ jobs:
       - name: Build API Gateway image
         run: docker build -t api-gateway ./api-gateway
 
+
   docker-scout:
     needs: build-and-test
     if: ${{ secrets.DOCKER_NAME != '' && secrets.DOCKER_TOKEN != '' }}
@@ -64,6 +65,7 @@ jobs:
           - service: api-gateway
             context: ./api-gateway
             image: api-gateway
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -71,6 +73,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 🔐 Đăng nhập Docker Hub (rất quan trọng để tránh lỗi "user githubactions not entitled")
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -78,21 +81,27 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       - name: Build ${{ matrix.service }} service image
-        run: docker build -t ${{ matrix.image }}:scout ${{ matrix.context }}
+        run: |
+          docker build -t docker.io/${{ secrets.DOCKER_NAME }}/${{ matrix.image }}:scout ${{ matrix.context }}
 
+      # 🧪 Phân tích bằng Docker Scout
       - name: Analyze ${{ matrix.service }} image with Docker Scout
         uses: docker/scout-action@v1
         with:
           command: cves
-          image: ${{ matrix.image }}:scout
-          sarif-file: ${{ matrix.image }}-docker-scout.sarif
-          exit-code: false
+          image: docker.io/${{ secrets.DOCKER_NAME }}/${{ matrix.image }}:scout
           accept-license: true
+          exit-code: false
+          sarif-file: ${{ matrix.image }}-docker-scout.sarif
+          write-comment: false
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # 📤 Upload kết quả dạng SARIF để GitHub hiển thị trong Security tab
       - name: Upload Docker Scout results
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: ${{ matrix.image }}-docker-scout.sarif
+          sarif_file: ${{ matrix.image }}-docker-scout.sarif }
+
 
   push-docker-images:
     needs: build-and-test
@@ -114,7 +123,7 @@ jobs:
 
       - name: Build and push service images
         env:
-          REGISTRY: ${{ secrets.DOCKER_NAME }}
+          REGISTRY: docker.io/${{ secrets.DOCKER_NAME }}
           GIT_SHA: ${{ github.sha }}
         run: |
           if [ -z "$REGISTRY" ]; then
@@ -127,10 +136,12 @@ jobs:
             IMAGE_SHA="$REGISTRY/$service:${GIT_SHA::7}"
             IMAGE_LATEST="$REGISTRY/$service:latest"
 
+            echo "🔧 Building and pushing $service..."
             docker build -t "$IMAGE_SHA" -t "$IMAGE_LATEST" "./$service"
             docker push "$IMAGE_SHA"
             docker push "$IMAGE_LATEST"
           done
+
       - name: Debug secrets
         run: |
           if [ -z "${{ secrets.DOCKER_NAME }}" ] || [ -z "${{ secrets.DOCKER_TOKEN }}" ]; then
@@ -139,4 +150,3 @@ jobs:
           else
             echo "Docker secrets found"
           fi
-
