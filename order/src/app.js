@@ -29,13 +29,29 @@ class App {
   }
 
   async setupOrderConsumer() {
-    console.log("Connecting to RabbitMQ...");
-
     const delay = config.rabbitMQConnectDelayMs;
-    setTimeout(async () => {
+
+    const scheduleRetry = () => {
+      console.log(`Retrying RabbitMQ connection in ${delay}ms...`);
+      setTimeout(connectToRabbitMQ, delay);
+    };
+
+    const connectToRabbitMQ = async () => {
+      console.log("Connecting to RabbitMQ...");
+
       try {
         const connection = await amqp.connect(config.rabbitMQURI);
         console.log("Connected to RabbitMQ");
+
+        connection.on("close", () => {
+          console.warn("RabbitMQ connection closed");
+          scheduleRetry();
+        });
+
+        connection.on("error", (error) => {
+          console.error("RabbitMQ connection error:", error.message);
+        });
+
         const channel = await connection.createChannel();
         await channel.assertQueue(config.orderQueue, { durable: true });
 
@@ -65,8 +81,11 @@ class App {
         });
       } catch (err) {
         console.error("Failed to connect to RabbitMQ:", err.message);
+        scheduleRetry();
       }
-    }, delay);
+    };
+
+    setTimeout(connectToRabbitMQ, delay);
   }
 
   start() {
