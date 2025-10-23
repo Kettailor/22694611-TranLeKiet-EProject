@@ -7,6 +7,10 @@ const config = require("./config");
 class App {
   constructor() {
     this.app = express();
+    this.app.use((req, res, next) => {
+      console.log(`[Order Service][Docker] ${req.method} ${req.originalUrl}`);
+      next();
+    });
     this.connectDB();
     this.setupOrderConsumer();
   }

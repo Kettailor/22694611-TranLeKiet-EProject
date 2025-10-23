@@ -29,6 +29,12 @@ class App {
   setMiddlewares() {
     this.app.use(express.json());
     this.app.use(express.urlencoded({ extended: false }));
+    this.app.use((req, res, next) => {
+      console.log(
+        `[Auth Service][Docker] ${req.method} ${req.originalUrl}`
+      );
+      next();
+    });
   }
 
   setRoutes() {
