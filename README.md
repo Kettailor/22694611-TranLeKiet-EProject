@@ -38,8 +38,12 @@ Các dịch vụ giao tiếp với nhau qua REST (HTTP) và hàng đợi RabbitM
 
 ## Kết quả kiểm thử Postman
 
-<!-- Thay thế đường dẫn bên dưới bằng ảnh kiểm thử Postman của bạn -->
-![Ảnh kiểm thử Postman](path/to/postman-test.png)
+![register](./assests/img/image.png)
+![login](./assests/img/image-1.png)
+![dashboard](./assests/img/image-2.png)
+![create_product](./assests/img/image-3.png)
+![get_product](./assests/img/image-4.png)
+![create_order](./assests/img/image-5.png)
 
 ## Bắt đầu sử dụng
 
@@ -78,23 +82,6 @@ Sao chép các biến cần thiết vào file `.env` trong từng thư mục d�
    docker compose down
    ```
 
-### Chạy dịch vụ trực tiếp (không dùng Docker)
-
-```bash
-# Từ thư mục gốc repo
-npm install
-
-# Cài phụ thuộc cho từng dịch vụ nếu cần
-npm install --prefix auth
-npm install --prefix product
-npm install --prefix order
-npm install --prefix api-gateway
-
-# Khởi chạy một dịch vụ
-npm start --prefix auth
-```
-
-Đảm bảo MongoDB và RabbitMQ đang hoạt động trên máy cục bộ hoặc cập nhật biến môi trường để trỏ tới hạ tầng phù hợp.
 
 ## Kiểm thử
 
